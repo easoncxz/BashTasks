@@ -1,0 +1,213 @@
+Xuzong Chen - xche985 - id:6471321
+SOFTENG 206 - Assignment 1 - 2013 Aug 10
+
+=====================
+
+	Notes
+
+=====================
+
+Compiling and running
+
+	compile c
+
+		> gcc -o DataTask DataTask.c
+		The name "DataTask" is arbitary.
+
+	run c compiled code
+
+		> ./DataTask
+
+	compile java
+
+		> javac DataTask.java
+
+	run java
+
+		> java DataTask
+		Here, "DataTask" should be the name of the class.
+
+	create bash script
+
+		> vim DataTask.sh
+		Just use a text editor and create a file with
+		the bash script being the contents.
+
+	run the bash script
+
+		> chmod +x DataTask.sh
+		This labels the file to be "executable".
+
+		> bash DataTask.sh
+		This uses bash to interpret the script.
+		
+		The first line of the script file may be special
+		and contain what's called a "shebang", like this:
+
+			#!/bin/bash			
+
+		This line tells the interpreter - whichever interpreter is
+		interpreting this script - to use /bin/bash as the interpreter
+		of this script.
+
+		If the script uses a shebang, it can also be run like this:
+
+			> chmod +x DataTask.sh
+			> ./DataTask.sh
+
+		The interpreter mentioned by the shebang would be used.
+
+Java-specific
+	
+	Getting input - CL args & stdin
+
+		Consider the outline of this ".java" file:
+
+			public class Thing {
+				public static void main(String[] args) {
+					// ...
+				}
+			}
+
+		When it is compiled, and run with:
+
+			> java Thing one two three
+
+		the "command line arguments", namely this "one two three"
+		thing, would become the String array "args".
+		I.e.,
+
+			args[0] == "one"
+			args[1] == "two"
+			args[2] == "three"
+
+		If input is to be read from standard input (i.e. stdin),
+		this could be done:
+
+			// Thing.java
+			import java.util.Scanner;
+
+			// ...
+
+			Scanner sc = new Scanner(System.in);
+			String str = sc.next();
+
+		This way, even when the input into stdin was seperated
+		by spaces, tabs, or new lines etc. (whatever whitespace.
+		details depends on java.util.Scanner), sc.next() would
+		always capture the NEXT input. (This manner of getting 
+		input is used because it is what's happening in the c 
+		program.)
+
+	Manipulating files
+
+		Say we want to read from "./README", write to
+		"/home/zong/new_file". Suppose "README" already
+		exists, and "new_file" doesn't exist.
+
+			import java.io.File;
+			import java.io.FileReader;
+			import java.io.FileWriter;
+			import java.io.BufferedReader;
+			import java.io.BufferedWriter;
+			import java.io.IOException;
+
+			// File objects represent files or directories. 
+			File fr, fw, dir;
+
+			// File objects can be created without affecting (e.g.
+			// creating) or being affected by (e.g. when there
+			// doesn't exist a file with the supposed name) actual
+			// files on the file system.
+			fw = new File("/home/zong/new_file"); 
+			fr = new File("./README");
+			dir = new File(".");
+			
+			// list contents of folder
+			File[] ls = dir.listFiles();
+
+			// write to file.
+			if (! fw.exists()) {  // which will hold true
+				fw.createNewFile();
+			}
+			try {
+				BufferedWriter bw = new BufferedWriter(
+						new FileWriter(fw));  // throws FileNotFoundException
+				bw.write("a line of text");  // throws IOException
+				bw.newLine();  // spec. sym. depends on OS.
+			} catch (Exception e) {
+				// do something, e.g.:
+				e.printStackTrace();
+			}
+			
+			// read from file.
+			try {
+				BufferedReader br = new BufferedReader(
+						new FilReader(fr));  // throws FileNotFoundException
+				String line = br.readLine();  // throws	IOException
+			} catch (Exception e) {
+				// do something, e.g.:
+				e.printStackTrace();
+			}
+
+Bash specific
+
+	getting command line args
+
+		This is easy.
+
+			argc=$#		# argument count
+			argv=$@		# argument vector/array
+			file_name=$0
+			arg_1=$1
+			arg_2=$2
+			# and so on
+
+	reading from stdin
+
+		Use the "read" command.
+
+			read MY_VAR
+
+		Something useful I found: keeping on reading words
+		from each line of a file(or stdin):
+
+			while read LINE; do
+				for WORD in $LINE; do
+					MY_VAR=$WORD
+				done
+			done
+
+		Using the above, and a variable to count the number
+		of "words", reading 3 words from stdin (i.e. keyboard
+		input) is achievable.
+		
+	if-statement condition logic
+
+		The syntax is weird.
+		
+			# AND
+			if [ COND_1 -a COND_2 ]; then # ...
+
+			# OR
+			if [ COND_1 -o COND_2 ]; then # ...
+
+			# is file of any kind
+			if [ -e FILE_NAME ]; then # ...
+
+			# is "normal" file (e.g. not a dir)
+			if [ -f FILE_NAME ]; then # ...
+
+			# is a dir
+			if [ -d FILE_NAME ]; then # ...
+
+	String indexing
+
+		String index starts with ZERO.
+
+			STR="abcd1234"
+			SUB_STR=${STR:2}  # "cd1234"
+			SUB_STR=${STR:6}  # "34"
+
+			STR_LEN=${#STR}  # 8
+			LAST_CHAR=${STR:$((${#STR}-1))}  # "4"
