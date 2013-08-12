@@ -1,3 +1,14 @@
+/*
+ * Xuzong Chen
+ * xche985
+ * 6471321
+ *
+ * SOFTENG 206
+ * Assignment 1
+ * Aug. 2013
+ *
+ */
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
